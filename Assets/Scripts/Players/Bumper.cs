@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Bumper : MonoBehaviour {
+
+    public event Action<GameObject> TouchedMiddleLine;
 
     protected BumperController controller;
     protected GameObject middleLine;
@@ -11,7 +14,7 @@ public class Bumper : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        // opponent gains a point
+        TouchedMiddleLine(gameObject);
     }
 
 }

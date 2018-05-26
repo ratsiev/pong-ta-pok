@@ -15,6 +15,14 @@ public class Creator : MonoBehaviour {
         screen = new ScreenSize(5);
     }
 
+    public GameObject CreatePlayer(bool isComputer = false, bool isBumperOne = false) {
+        GameObject player = isComputer ? CreateBumper(isComputer, !isBumperOne) : CreateBumper(false, !isBumperOne);
+        if (!isComputer)
+            player.GetComponent<Human>().isBumpOne = isBumperOne;
+        player.tag = isBumperOne ? "PlayerOne" : "PlayerTwo";
+        return player;
+    }
+
     public GameObject CreateMiddleLine(float lenght) {
         middleLine.transform.position = new Vector2(0, 0);
         middleLine.transform.localScale = new Vector3(0.1f, screen.height * lenght, 0.1f);
@@ -24,14 +32,6 @@ public class Creator : MonoBehaviour {
     public GameObject CreateBall() {
         ball.transform.localScale = new Vector3(1 - screen.height / 3.5f, 1 - screen.height / 3.5f, 1 - screen.height / 3.5f);
         return ball;
-    }
-
-    public GameObject CreateBumper(bool isComputer = false, bool right = true) {
-        GameObject bumper = isComputer ? computer : human;
-        int multiplier = right ? 1 : -1;
-        bumper.transform.localScale = new Vector3(0.4f, 1 - screen.height / 2.5f, 0.4f);
-        bumper.transform.position = new Vector2((screen.width - screen.width / 4.5f) * multiplier, 0);
-        return bumper;
     }
 
     public GameObject CreateRing(float position, bool up = true) {
@@ -53,6 +53,15 @@ public class Creator : MonoBehaviour {
         wall.tag = type;
         return wall;
     }
+
+    private GameObject CreateBumper(bool isComputer = false, bool right = true) {
+        GameObject bumper = isComputer ? computer : human;
+        int multiplier = right ? 1 : -1;
+        bumper.transform.localScale = new Vector3(0.4f, 1 - screen.height / 2.5f, 0.4f);
+        bumper.transform.position = new Vector2((screen.width - screen.width / 4.5f) * multiplier, 0);
+        return bumper;
+    }
+
 }
 
 public struct ScreenSize {

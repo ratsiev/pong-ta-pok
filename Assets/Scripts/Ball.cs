@@ -1,19 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Ball : MonoBehaviour {
 
-    public float speed = 5f;
+    public event Action<GameObject> TouchedWall;
+    public event Action<GameObject> PassedThroughRing;
+    public event Action StoppedMoving;
+
+    private readonly float speed = 5f;
     private Rigidbody2D rig;
+    private GameObject lastPlayer;
 
-    public GameObject LastToTouch { get; private set; }
-
-    void Start() {
+    void Awake() {
         rig = GetComponent<Rigidbody2D>();
     }
 
     private void Update() {
-        if (!IsMoving())
-            Debug.Log("NotMoving");
+        if (!IsMoving() && lastPlayer) {
+            StoppedMoving();
+            Destroy(gameObject);
+        }
     }
 
     public bool IsMoving() {
@@ -32,16 +38,21 @@ public class Ball : MonoBehaviour {
         rig.velocity = (target - transform.position).normalized * speed;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.GetComponent<Bumper>())
-            LastToTouch = collision.gameObject;
-        if (collision.collider.tag == "OuterWall")
-            Debug.Log("Touched outer wall");
+    public bool OnRightSide() {
+        return transform.position.x > GameObject.FindGameObjectWithTag("MiddleLine").transform.position.x;
     }
 
-    private void OnTriggerStay2D(Collider2D collision) {
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.GetComponent<Bumper>())
+            lastPlayer = collision.gameObject;
+        if (collision.gameObject.tag == "OuterWall")
+            TouchedWall(lastPlayer);
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Ring" && GotThroughRing(collision.bounds))
-            Debug.Log("Passed through ring");
+            PassedThroughRing(lastPlayer);
     }
 
     private bool GotThroughRing(Bounds ringBounds) {

@@ -2,24 +2,30 @@
 
 public class Game : MonoBehaviour {
 
+    public delegate void PlayerScored(GameObject player);
+
     [HideInInspector] public GameObject playerOne;
     [HideInInspector] public GameObject playerTwo;
     [HideInInspector] public GameObject ball;
-    private Creator objectCreator;
+    private Creator creator;
     private GameObject servedPlayer;
+    private Score score;
 
     void Awake() {
-        objectCreator = GetComponent<Creator>();
-        ball = Instantiate(objectCreator.CreateBall(), transform);
+        creator = FindObjectOfType<Creator>();
+        score = FindObjectOfType<Score>();
+        ball = Instantiate(creator.CreateBall(), transform);
         if (!playerOne)
-            playerOne = CreatePlayer(false, true);
+            playerOne = Instantiate(creator.CreatePlayer(false, true), transform);
         if (!playerTwo)
             if (PlayerPrefs.GetString("Players") == "OnePlayer")
-                playerTwo = CreatePlayer(true); // computer
+                playerTwo = Instantiate(creator.CreatePlayer(true), transform); // computer
             else
-                playerTwo = CreatePlayer(false); // human
+                playerTwo = Instantiate(creator.CreatePlayer(false), transform); // human           
+    }
 
-        servedPlayer = playerOne;
+    private void Start() {
+        ServeBall(playerOne);
     }
 
     private void Update() {
@@ -28,18 +34,9 @@ public class Game : MonoBehaviour {
         // if ball touches outer walls, destroy and instantiate again, the opponent of the player who let the ball pass wins a point, then serve the ball
     }
 
-    private GameObject CreatePlayer(bool isComputer = false, bool isBumperOne = false) {
-        GameObject player = isComputer ? objectCreator.CreateBumper(isComputer, !isBumperOne) : objectCreator.CreateBumper(false, !isBumperOne);
-        if (!isComputer)
-            player.GetComponent<Human>().isBumpOne = isBumperOne;
-        return Instantiate(player, transform);
-    }
-
-    private void ServeBall() {
-        if (servedPlayer == playerTwo)
-            ball.GetComponent<Ball>().Serve(playerOne.transform.position);
-        else
-            ball.GetComponent<Ball>().Serve(playerTwo.transform.position);
+    private void ServeBall(GameObject player) {
+        ball.GetComponent<Ball>().Serve(player.transform.position);
+        servedPlayer = player;
     }
 
 }

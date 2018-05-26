@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class Ballcourt : MonoBehaviour {
+public class Tlachtli : MonoBehaviour {
 
     public Creator objectCreator;
-
     private readonly bool horizontal = true;
     private readonly bool yPosition = true;
     private readonly bool xPosition = true;
@@ -12,7 +12,7 @@ public class Ballcourt : MonoBehaviour {
 
         // Create outer walls
         Instantiate(objectCreator.CreateWall("OuterWall", new Vector2(0, 10), 1.9f, horizontal, yPosition, xPosition), transform);
-        Instantiate(objectCreator.CreateWall("OuterWall", new Vector2(0, 10), 1.9f, horizontal, !yPosition, xPosition), transform);
+        Instantiate(objectCreator.CreateWall("OuterWall", new Vector2(0, 9.9f), 1.9f, horizontal, !yPosition, xPosition), transform);
         Instantiate(objectCreator.CreateWall("OuterWall", new Vector2(25, 0), 1.84f, !horizontal, yPosition, !xPosition), transform);
         Instantiate(objectCreator.CreateWall("OuterWall", new Vector2(25, 0), 1.84f, !horizontal, yPosition, xPosition), transform);
 
