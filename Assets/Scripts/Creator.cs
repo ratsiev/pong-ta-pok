@@ -4,7 +4,8 @@ public class Creator : MonoBehaviour {
 
     public GameObject ball;
     public GameObject wall;
-    public GameObject bumper;
+    public GameObject human;
+    public GameObject computer;
     public GameObject ring;
     public GameObject middleLine;
 
@@ -25,7 +26,8 @@ public class Creator : MonoBehaviour {
         return ball;
     }
 
-    public GameObject CreateBumper(bool right = true) {
+    public GameObject CreateBumper(bool isComputer = false, bool right = true) {
+        GameObject bumper = isComputer ? computer : human;
         int multiplier = right ? 1 : -1;
         bumper.transform.localScale = new Vector3(0.4f, 1 - screen.height / 2.5f, 0.4f);
         bumper.transform.position = new Vector2((screen.width - screen.width / 4.5f) * multiplier, 0);
@@ -48,6 +50,7 @@ public class Creator : MonoBehaviour {
         float xPosition = position.x == 0 ? 0 : (screen.width - screen.width / position.x) * horizontalMultiplier;
         wall.transform.localScale = new Vector3(width, height, 0.6f);
         wall.transform.position = new Vector2(xPosition, yPosition);
+        wall.tag = type;
         return wall;
     }
 }

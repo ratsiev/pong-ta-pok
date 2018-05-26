@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
 public class BumperController : MonoBehaviour {
-
-    public bool isBumpOne;
+  
     private readonly int speed = 300;
     Rigidbody2D rig;
 

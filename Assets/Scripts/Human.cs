@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Human : Bumper {
 
-    private BumperController controller;
-
-    private void Awake() {
+    public bool isBumpOne;
+    protected override void Start() {
+        base.Start();
         controller = GetComponent<BumperController>();
     }
 
-    void FixedUpdate() {
-        if (controller.isBumpOne)
+    void Update() {
+        if (isBumpOne)
             controller.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
         else
             controller.Move(new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2")));
+
     }
 
 }

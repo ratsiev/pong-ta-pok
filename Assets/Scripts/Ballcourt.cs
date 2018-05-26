@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ballcourt : MonoBehaviour {
 
@@ -19,13 +18,13 @@ public class Ballcourt : MonoBehaviour {
 
 
         // Create slopes    
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(0, 2.7f), 1.6f, horizontal, yPosition, xPosition), transform);
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(0, 2.7f), 1.6f, horizontal, !yPosition, xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(0, 2.7f), 1.6f, horizontal, yPosition, xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(0, 2.7f), 1.6f, horizontal, !yPosition, xPosition), transform);
 
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, yPosition, xPosition), transform);
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, yPosition, !xPosition), transform);
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, !yPosition, xPosition), transform);
-        Instantiate(objectCreator.CreateWall("Slope", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, !yPosition, !xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, yPosition, xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, yPosition, !xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, !yPosition, xPosition), transform);
+        Instantiate(objectCreator.CreateWall("Wall", new Vector2(4.9f, 3.912f), 0.272f, !horizontal, !yPosition, !xPosition), transform);
 
         // Create rings
         Instantiate(objectCreator.CreateRing(2.28f, yPosition), transform);
