@@ -17,8 +17,7 @@ public class Creator : MonoBehaviour {
 
     public GameObject CreatePlayer(bool isComputer = false, bool isBumperOne = false) {
         GameObject player = isComputer ? CreateBumper(isComputer, !isBumperOne) : CreateBumper(false, !isBumperOne);
-        if (!isComputer)
-            player.GetComponent<Human>().isBumpOne = isBumperOne;
+        player.GetComponent<Bumper>().isBumpOne = isBumperOne;
         player.tag = isBumperOne ? "PlayerOne" : "PlayerTwo";
         return player;
     }

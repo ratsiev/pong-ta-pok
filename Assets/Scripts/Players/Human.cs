@@ -2,7 +2,6 @@
 
 public class Human : Bumper {
 
-    public bool isBumpOne;
     protected override void Start() {
         base.Start();
         controller = GetComponent<BumperController>();

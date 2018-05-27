@@ -4,7 +4,7 @@ using UnityEngine;
 public class Bumper : MonoBehaviour {
 
     public event Action<GameObject> TouchedMiddleLine;
-
+    [HideInInspector]public bool isBumpOne;
     protected BumperController controller;
     protected GameObject middleLine;
 

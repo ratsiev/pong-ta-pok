@@ -3,23 +3,21 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour {
 
-    public event Action<GameObject> TouchedWall;
-    public event Action<GameObject> PassedThroughRing;
-    public event Action StoppedMoving;
+    public event EventHandler<BallEventArgs> PassedThroughRing;
+    public event EventHandler<BallEventArgs> StoppedMoving;
+    public event EventHandler<BallEventArgs> TouchedWall;
 
     private readonly float speed = 5f;
     private Rigidbody2D rig;
     private GameObject lastPlayer;
 
     void Awake() {
-        rig = GetComponent<Rigidbody2D>();
+        rig = GetComponent<Rigidbody2D>();   
     }
 
     private void Update() {
-        if (!IsMoving() && lastPlayer) {
-            StoppedMoving();
-            Destroy(gameObject);
-        }
+        if(!IsMoving())
+            StoppedMoving(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
     }
 
     public bool IsMoving() {
@@ -46,13 +44,13 @@ public class Ball : MonoBehaviour {
         if (collision.gameObject.GetComponent<Bumper>())
             lastPlayer = collision.gameObject;
         if (collision.gameObject.tag == "OuterWall")
-            TouchedWall(lastPlayer);
+           TouchedWall(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
 
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Ring" && GotThroughRing(collision.bounds))
-            PassedThroughRing(lastPlayer);
+            PassedThroughRing(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
     }
 
     private bool GotThroughRing(Bounds ringBounds) {
@@ -60,5 +58,6 @@ public class Ball : MonoBehaviour {
         ringBounds = new Bounds(ringBounds.center, new Vector3(0.1f, ringBounds.size.y, ringBounds.size.z));
         return (ball.max.y < ringBounds.max.y && ball.min.y > ringBounds.min.y) && (ball.center.x > ringBounds.center.x || ball.center.x < ringBounds.center.x);
     }
+
 
 }
