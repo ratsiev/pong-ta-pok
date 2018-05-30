@@ -15,4 +15,8 @@ public class Human : Bumper {
 
     }
 
+    public override void ResetBumper() {
+        base.ResetBumper();
+        enabled = false;
+    }
 }

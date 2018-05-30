@@ -10,11 +10,22 @@ public class Ball : MonoBehaviour {
     private Rigidbody2D rig;
     private GameObject lastPlayer;
     private Vector3 initialPosition;
+    private Score score;
 
     void Awake() {
         rig = GetComponent<Rigidbody2D>();
         initialPosition = transform.position;
         lastPlayer = GameObject.FindGameObjectWithTag("PlayerOne");
+    }
+
+    void Start() {
+        score = FindObjectOfType<Score>();
+        score.MaxScoreReached += Score_MaxScoreReached;
+    }
+
+    private void Score_MaxScoreReached(string obj) {
+        rig.position = initialPosition;
+        rig.Sleep();
     }
 
     private void Update() {
@@ -35,8 +46,6 @@ public class Ball : MonoBehaviour {
     }
 
     public void Serve(Vector3 target) {
-        if (rig.IsSleeping())
-            rig.WakeUp();
         rig.position = initialPosition;
         rig.velocity = (target - initialPosition).normalized * speed;
     }

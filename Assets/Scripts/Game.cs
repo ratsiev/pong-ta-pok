@@ -7,7 +7,6 @@ public class Game : MonoBehaviour {
     [HideInInspector] public GameObject ball;
     private Creator creator;
     private Score score;
-    private GameObject playerToServe;
 
     void Awake() {
         creator = FindObjectOfType<Creator>();
@@ -41,6 +40,11 @@ public class Game : MonoBehaviour {
     }
 
     private void Score_MaxScoreReached(string obj) {
+        score.NextRound -= Score_NextRound;
+        score.enabled = false;
+        ball.GetComponent<Ball>().enabled = false;
+        playerOne.GetComponent<Bumper>().ResetBumper();
+        playerTwo.GetComponent<Bumper>().ResetBumper();
         Debug.Log($"{obj} reached max score");
     }
 

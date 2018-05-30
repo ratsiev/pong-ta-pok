@@ -12,7 +12,6 @@ public class Score : MonoBehaviour {
     private int playerTwo = 0;
     private GameObject ball;
     private Bumper[] players;
-    private string playerWhoScored;
 
     private void Start() {
         ball = GameObject.FindGameObjectWithTag("Ball");
@@ -48,7 +47,10 @@ public class Score : MonoBehaviour {
 
     private void ScorePoint(string player, ref int refScore) {
         ScoreChanged(player, ++refScore);
-        if (refScore >= maxScore)
+        if (refScore >= maxScore) {         
+            ball.GetComponent<Ball>().StoppedMoving -= Ball_StoppedMoving;
+            ball.GetComponent<Ball>().PassedThroughRing -= Ball_PassedThroughRing;
             MaxScoreReached(player);
+        }         
     }
 }
