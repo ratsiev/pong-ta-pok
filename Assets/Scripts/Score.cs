@@ -7,7 +7,7 @@ public class Score : MonoBehaviour {
     public event Action<string, int> ScoreChanged;
     public event Action<string> MaxScoreReached;
     public event Action<string> NextRound;
-    public int maxScore = 5;
+    public readonly int maxScore = 10;
     private int playerOne = 0;
     private int playerTwo = 0;
     private GameObject ball;
@@ -19,6 +19,11 @@ public class Score : MonoBehaviour {
         ball.GetComponent<Ball>().StoppedMoving += Ball_StoppedMoving;
         ball.GetComponent<Ball>().PassedThroughRing += Ball_PassedThroughRing;
         players.ToList().ForEach(x => x.TouchedMiddleLine += Player_TouchedMiddleLine);
+    }
+
+    private void ResetScore() {
+        ScoreChanged?.Invoke("PlayerOne", playerOne = 0);
+        ScoreChanged?.Invoke("PlayerTwo", playerTwo = 0);
     }
 
     private void Player_TouchedMiddleLine(GameObject obj) {
@@ -38,19 +43,19 @@ public class Score : MonoBehaviour {
     private void Ball_StoppedMoving(object sender, BallEventArgs e) {
         if (e.BallOnRightSide) {
             ScorePoint("PlayerOne", ref playerOne);
-            NextRound("PlayerOne");
+            NextRound?.Invoke("PlayerOne");
         } else {
             ScorePoint("PlayerTwo", ref playerTwo);
-            NextRound("PlayerTwo");
+            NextRound?.Invoke("PlayerTwo");
         }
     }
 
     private void ScorePoint(string player, ref int refScore) {
-        ScoreChanged(player, ++refScore);
+        ScoreChanged?.Invoke(player, ++refScore);
         if (refScore >= maxScore) {         
             ball.GetComponent<Ball>().StoppedMoving -= Ball_StoppedMoving;
             ball.GetComponent<Ball>().PassedThroughRing -= Ball_PassedThroughRing;
-            MaxScoreReached(player);
+            MaxScoreReached?.Invoke(player);
         }         
     }
 }

@@ -6,12 +6,10 @@ public class Computer : Bumper {
 
     private GameObject ball;
     private BallPosition ballPosition;
-    private Vector3 initialPosition;
 
     protected override void Start() {
         base.Start();
         controller = GetComponent<BumperController>();
-        initialPosition = transform.position;
 
         if (!ball)
             ball = GameObject.FindGameObjectWithTag("Ball");
@@ -38,13 +36,16 @@ public class Computer : Bumper {
             } else {
                 GoToInitialPosition();
             }
-
         }
-
     }
 
     private void GoToInitialPosition() {
         controller.Move((initialPosition - transform.position).normalized);
+    }
+
+    public override void ResetBumper(bool enable) {
+        base.ResetBumper(enable);
+        enabled = enable;
     }
 
     private struct BallPosition {

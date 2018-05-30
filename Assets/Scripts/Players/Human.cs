@@ -12,11 +12,10 @@ public class Human : Bumper {
             controller.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
         else
             controller.Move(new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2")));
-
     }
 
-    public override void ResetBumper() {
-        base.ResetBumper();
-        enabled = false;
+    public override void ResetBumper(bool enable) {
+        base.ResetBumper(enable);
+        enabled = enable;
     }
 }

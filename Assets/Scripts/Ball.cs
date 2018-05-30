@@ -30,7 +30,7 @@ public class Ball : MonoBehaviour {
 
     private void Update() {
         if (!IsMoving())
-            StoppedMoving(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
+            StoppedMoving?.Invoke(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
     }
 
     public bool IsMoving() {
@@ -61,7 +61,7 @@ public class Ball : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Ring" && GotThroughRing(collision.bounds))
-            PassedThroughRing(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
+            PassedThroughRing?.Invoke(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
     }
 
     private bool GotThroughRing(Bounds ringBounds) {

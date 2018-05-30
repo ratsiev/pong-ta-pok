@@ -2,9 +2,9 @@
 
 public class Game : MonoBehaviour {
 
-    [HideInInspector] public GameObject playerOne;
-    [HideInInspector] public GameObject playerTwo;
-    [HideInInspector] public GameObject ball;
+    private GameObject playerOne;
+    private GameObject playerTwo;
+    private GameObject ball;
     private Creator creator;
     private Score score;
 
@@ -24,28 +24,27 @@ public class Game : MonoBehaviour {
     }
 
     private void Start() {
-        ServeBall(playerOne);
+        ServeBall(playerOne.GetComponent<Bumper>().initialPosition);
         score.MaxScoreReached += Score_MaxScoreReached;
     }
 
     private void Score_NextRound(string obj) {
         if (obj == "PlayerOne")
-            ServeBall(playerOne);
+            ServeBall(playerOne.GetComponent<Bumper>().initialPosition);
         else
-            ServeBall(playerTwo);
+            ServeBall(playerTwo.GetComponent<Bumper>().initialPosition);
     }
 
-    private void ServeBall(GameObject player) {
-        ball.GetComponent<Ball>().Serve(player.transform.position);
+    private void ServeBall(Vector3 position) {
+        ball.GetComponent<Ball>().Serve(position);
     }
 
     private void Score_MaxScoreReached(string obj) {
         score.NextRound -= Score_NextRound;
         score.enabled = false;
         ball.GetComponent<Ball>().enabled = false;
-        playerOne.GetComponent<Bumper>().ResetBumper();
-        playerTwo.GetComponent<Bumper>().ResetBumper();
-        Debug.Log($"{obj} reached max score");
+        playerOne.GetComponent<Bumper>().ResetBumper(false);
+        playerTwo.GetComponent<Bumper>().ResetBumper(false);
     }
 
 }
