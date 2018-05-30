@@ -5,18 +5,20 @@ public class Ball : MonoBehaviour {
 
     public event EventHandler<BallEventArgs> PassedThroughRing;
     public event EventHandler<BallEventArgs> StoppedMoving;
-    public event EventHandler<BallEventArgs> TouchedWall;
 
     private readonly float speed = 5f;
     private Rigidbody2D rig;
     private GameObject lastPlayer;
+    private Vector3 initialPosition;
 
     void Awake() {
-        rig = GetComponent<Rigidbody2D>();   
+        rig = GetComponent<Rigidbody2D>();
+        initialPosition = transform.position;
+        lastPlayer = GameObject.FindGameObjectWithTag("PlayerOne");
     }
 
     private void Update() {
-        if(!IsMoving())
+        if (!IsMoving())
             StoppedMoving(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
     }
 
@@ -33,19 +35,19 @@ public class Ball : MonoBehaviour {
     }
 
     public void Serve(Vector3 target) {
-        rig.velocity = (target - transform.position).normalized * speed;
-    }
-
-    public bool OnRightSide() {
-        return transform.position.x > GameObject.FindGameObjectWithTag("MiddleLine").transform.position.x;
+        if (rig.IsSleeping())
+            rig.WakeUp();
+        rig.position = initialPosition;
+        rig.velocity = (target - initialPosition).normalized * speed;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.GetComponent<Bumper>())
             lastPlayer = collision.gameObject;
-        if (collision.gameObject.tag == "OuterWall")
-           TouchedWall(gameObject, new BallEventArgs(lastPlayer, transform.position.x));
-
+        if (collision.gameObject.tag == "OuterWall") {
+            rig.velocity = Vector3.zero;
+            rig.angularVelocity = 0;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {

@@ -7,12 +7,11 @@ public class Game : MonoBehaviour {
     [HideInInspector] public GameObject ball;
     private Creator creator;
     private Score score;
+    private GameObject playerToServe;
 
     void Awake() {
         creator = FindObjectOfType<Creator>();
         ball = Instantiate(creator.CreateBall(), transform);
-        ball.GetComponent<Ball>().TouchedWall += Game_TouchedWall;
-        ball.GetComponent<Ball>().StoppedMoving += Game_StoppedMoving;
 
         if (!playerOne)
             playerOne = Instantiate(creator.CreatePlayer(false, true), transform);
@@ -22,6 +21,7 @@ public class Game : MonoBehaviour {
             else
                 playerTwo = Instantiate(creator.CreatePlayer(false), transform); // human       
         score = FindObjectOfType<Score>();
+        score.NextRound += Score_NextRound;
     }
 
     private void Start() {
@@ -29,10 +29,11 @@ public class Game : MonoBehaviour {
         score.MaxScoreReached += Score_MaxScoreReached;
     }
 
-    private void Update() {
-        // if ball stops moving, destroy and instantiate again, the opponent of the player who let the ball stop wins a point, then serve the ball
-        // if ball goes through ring, game ends and the one who scored wins
-        // if ball touches outer walls, destroy and instantiate again, the opponent of the player who let the ball pass wins a point, then serve the ball
+    private void Score_NextRound(string obj) {
+        if (obj == "PlayerOne")
+            ServeBall(playerOne);
+        else
+            ServeBall(playerTwo);
     }
 
     private void ServeBall(GameObject player) {
@@ -41,14 +42,6 @@ public class Game : MonoBehaviour {
 
     private void Score_MaxScoreReached(string obj) {
         Debug.Log($"{obj} reached max score");
-    }
-
-    private void Game_StoppedMoving(object sender, BallEventArgs e) {
-        Debug.Log("Ball stopped moving");
-    }
-
-    private void Game_TouchedWall(object sender, BallEventArgs e) {
-        Debug.Log($"{e.LastPlayerToTouchBall.tag} scored a point");
     }
 
 }

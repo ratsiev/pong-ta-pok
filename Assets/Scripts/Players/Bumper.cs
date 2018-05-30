@@ -4,7 +4,7 @@ using UnityEngine;
 public class Bumper : MonoBehaviour {
 
     public event Action<GameObject> TouchedMiddleLine;
-    [HideInInspector]public bool isBumpOne;
+    [HideInInspector] public bool isBumpOne;
     protected BumperController controller;
     protected GameObject middleLine;
 
@@ -14,7 +14,13 @@ public class Bumper : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        TouchedMiddleLine(gameObject);
+        if (isBumpOne) {
+            if (transform.position.x <= middleLine.transform.position.x)
+                TouchedMiddleLine(gameObject);
+        } else {
+            if (transform.position.x >= middleLine.transform.position.x)
+                TouchedMiddleLine(gameObject);
+        }
     }
 
 }
