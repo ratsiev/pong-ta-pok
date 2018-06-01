@@ -21,41 +21,37 @@ public class Score : MonoBehaviour {
         players.ToList().ForEach(x => x.TouchedMiddleLine += Player_TouchedMiddleLine);
     }
 
-    private void ResetScore() {
-        ScoreChanged?.Invoke("PlayerOne", playerOne = 0);
-        ScoreChanged?.Invoke("PlayerTwo", playerTwo = 0);
-    }
-
     private void Player_TouchedMiddleLine(GameObject obj) {
         if (obj.tag == "PlayerOne")
-            ScorePoint("PlayerTwo", ref playerTwo);
+            ScorePoint("PlayerTwo", ++playerTwo);
         else
-            ScorePoint("PlayerOne", ref playerOne);
+            ScorePoint("PlayerOne", ++playerOne);
     }
 
     private void Ball_PassedThroughRing(object sender, BallEventArgs e) {
         if (!e.BallOnRightSide && e.LastPlayerToTouchBall.tag == "PlayerOne")
-            ScorePoint(e.LastPlayerToTouchBall.tag, ref playerOne);
+            ScorePoint(e.LastPlayerToTouchBall.tag, playerOne = maxScore);
         else if (e.BallOnRightSide && e.LastPlayerToTouchBall.tag == "PlayerTwo")
-            ScorePoint(e.LastPlayerToTouchBall.tag, ref playerTwo);
+            ScorePoint(e.LastPlayerToTouchBall.tag, playerTwo = maxScore);
+
     }
 
     private void Ball_StoppedMoving(object sender, BallEventArgs e) {
         if (e.BallOnRightSide) {
-            ScorePoint("PlayerOne", ref playerOne);
+            ScorePoint("PlayerOne", ++playerOne);
             NextRound?.Invoke("PlayerOne");
         } else {
-            ScorePoint("PlayerTwo", ref playerTwo);
+            ScorePoint("PlayerTwo", ++playerTwo);
             NextRound?.Invoke("PlayerTwo");
         }
     }
 
-    private void ScorePoint(string player, ref int refScore) {
-        ScoreChanged?.Invoke(player, ++refScore);
-        if (refScore >= maxScore) {         
+    private void ScorePoint(string player, int refScore) {
+        ScoreChanged?.Invoke(player, refScore);
+        if (refScore >= maxScore) {
             ball.GetComponent<Ball>().StoppedMoving -= Ball_StoppedMoving;
             ball.GetComponent<Ball>().PassedThroughRing -= Ball_PassedThroughRing;
             MaxScoreReached?.Invoke(player);
-        }         
+        }
     }
 }

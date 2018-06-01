@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -9,14 +10,16 @@ public class MainMenu : MonoBehaviour {
 
     void Start() {
         mainText.fontSize = Screen.width / 8;
-        foreach (Button button in buttons) {
-            button.GetComponentInChildren<Text>().fontSize = Screen.width / 16;
-        }
+        buttons.ToList().ForEach(x => x.GetComponentInChildren<Text>().fontSize = Screen.width / 16);
     }
 
     public void SetPlayers(string players) {
         PlayerPrefs.SetString("Players", players);
         SceneManager.LoadScene("Game");
+    }
+
+    public void ExitGame() {
+        Application.Quit();
     }
 
 }

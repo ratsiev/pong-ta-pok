@@ -5,6 +5,7 @@ public class Ball : MonoBehaviour {
 
     public event EventHandler<BallEventArgs> PassedThroughRing;
     public event EventHandler<BallEventArgs> StoppedMoving;
+    public event Action TouchedWall;
 
     private readonly float speed = 5f;
     private Rigidbody2D rig;
@@ -53,10 +54,11 @@ public class Ball : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.GetComponent<Bumper>())
             lastPlayer = collision.gameObject;
-        if (collision.gameObject.tag == "OuterWall") {
+        else if (collision.gameObject.tag == "OuterWall") {
             rig.velocity = Vector3.zero;
             rig.angularVelocity = 0;
-        }
+        } else if (collision.gameObject.tag == "Wall")
+            TouchedWall();
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {

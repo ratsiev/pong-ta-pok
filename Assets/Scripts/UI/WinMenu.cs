@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameMenu : MonoBehaviour {
+public class WinMenu : MonoBehaviour {
 
     public Button playAgain;
     public Button reset;

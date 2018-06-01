@@ -4,8 +4,7 @@ public class Creator : MonoBehaviour {
 
     public GameObject ball;
     public GameObject wall;
-    public GameObject human;
-    public GameObject computer;
+    public GameObject bumper;
     public GameObject ring;
     public GameObject middleLine;
 
@@ -15,11 +14,13 @@ public class Creator : MonoBehaviour {
         screen = new ScreenSize(5);
     }
 
-    public GameObject CreatePlayer(bool isComputer = false, bool isBumperOne = false) {
-        GameObject player = isComputer ? CreateBumper(isComputer, !isBumperOne) : CreateBumper(false, !isBumperOne);
-        player.GetComponent<Bumper>().isBumpOne = isBumperOne;
-        player.tag = isBumperOne ? "PlayerOne" : "PlayerTwo";
-        return player;
+    public GameObject CreatePlayer(bool isBumperOne = false) {
+        int multiplier = isBumperOne ? -1 : 1;
+        bumper.transform.localScale = new Vector3(0.4f, 1 - screen.height / 2.5f, 0.4f);
+        bumper.transform.position = new Vector2((screen.width - screen.width / 4.5f) * multiplier, 0);
+        bumper.GetComponent<Bumper>().isBumpOne = isBumperOne;
+        bumper.tag = isBumperOne ? "PlayerOne" : "PlayerTwo";
+        return bumper;
     }
 
     public GameObject CreateMiddleLine(float lenght) {
@@ -51,14 +52,6 @@ public class Creator : MonoBehaviour {
         wall.transform.position = new Vector2(xPosition, yPosition);
         wall.tag = type;
         return wall;
-    }
-
-    private GameObject CreateBumper(bool isComputer = false, bool right = true) {
-        GameObject bumper = isComputer ? computer : human;
-        int multiplier = right ? 1 : -1;
-        bumper.transform.localScale = new Vector3(0.4f, 1 - screen.height / 2.5f, 0.4f);
-        bumper.transform.position = new Vector2((screen.width - screen.width / 4.5f) * multiplier, 0);
-        return bumper;
     }
 
 }

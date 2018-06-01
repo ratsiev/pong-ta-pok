@@ -13,12 +13,9 @@ public class Game : MonoBehaviour {
         ball = Instantiate(creator.CreateBall(), transform);
 
         if (!playerOne)
-            playerOne = Instantiate(creator.CreatePlayer(false, true), transform);
+            playerOne = Instantiate(creator.CreatePlayer(true), transform);
         if (!playerTwo)
-            if (PlayerPrefs.GetString("Players") == "OnePlayer")
-                playerTwo = Instantiate(creator.CreatePlayer(true), transform); // computer
-            else
-                playerTwo = Instantiate(creator.CreatePlayer(false), transform); // human       
+            playerTwo = Instantiate(creator.CreatePlayer(), transform);      
         score = FindObjectOfType<Score>();
         score.NextRound += Score_NextRound;
     }
@@ -43,8 +40,8 @@ public class Game : MonoBehaviour {
         score.NextRound -= Score_NextRound;
         score.enabled = false;
         ball.GetComponent<Ball>().enabled = false;
-        playerOne.GetComponent<Bumper>().ResetBumper(false);
-        playerTwo.GetComponent<Bumper>().ResetBumper(false);
+        playerOne.GetComponent<Bumper>().DisableBumper();
+        playerTwo.GetComponent<Bumper>().DisableBumper();
     }
 
 }

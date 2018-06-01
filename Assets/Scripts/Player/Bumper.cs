@@ -4,6 +4,7 @@ using UnityEngine;
 public class Bumper : MonoBehaviour {
 
     public event Action<GameObject> TouchedMiddleLine;
+    public event Action TouchedBall;
     [HideInInspector] public bool isBumpOne;
     protected BumperController controller;
     protected GameObject middleLine;
@@ -14,7 +15,15 @@ public class Bumper : MonoBehaviour {
     }
     protected virtual void Start() {
         if (!middleLine)
-            middleLine = GameObject.FindGameObjectWithTag("MiddleLine");      
+            middleLine = GameObject.FindGameObjectWithTag("MiddleLine");
+        controller = GetComponent<BumperController>();
+    }
+
+    void Update() {
+        if (isBumpOne)
+            controller.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+        else
+            controller.Move(new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2")));
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -24,12 +33,18 @@ public class Bumper : MonoBehaviour {
         } else {
             if (transform.position.x >= middleLine.transform.position.x)
                 TouchedMiddleLine?.Invoke(gameObject);
-        }
+        }       
     }
 
-    public virtual void ResetBumper(bool enable) {
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.collider.tag=="Ball")
+            TouchedBall();
+    }
+
+    public virtual void DisableBumper() {
         controller.rig.velocity = Vector3.zero;
         controller.rig.position = initialPosition;
+        enabled = false;
     }
 
 }
